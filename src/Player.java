@@ -1,6 +1,5 @@
-import javafx.scene.control.Tab;
-
 import java.util.Scanner;
+
 public class Player {
     private Scanner scanner = new Scanner(System.in);
     private String name;

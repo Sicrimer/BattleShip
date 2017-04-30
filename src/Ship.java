@@ -1,6 +1,7 @@
 public class Ship {
 
     private int hp;
+
     private ShipStatus shipStatus;
 
     public Ship(int hp){
@@ -8,8 +9,8 @@ public class Ship {
         shipStatus = ShipStatus.ALIVE;
     }
 
-    public int getHp() {
-        return hp;
+    public ShipStatus getShipStatus(){
+        return shipStatus;
     }
 
     public void attackShip(){

@@ -108,6 +108,70 @@ public class Table {
         return points[x][y];
     }
 
+    private void openPoints(int x, int y){
+        if(x >= 0 && x < LENGTH && y >= 0 && y < LENGTH) {
+            int downBorder = LENGTH - 1, upBorder = 0, leftBorder = 0, rightBorder = LENGTH - 1;
+            if (x > 0) {
+                upBorder = x - 1;
+            }
+            if (x < LENGTH - 1) {
+                downBorder = x + 1;
+            }
+            if (y > 0) {
+                leftBorder = y - 1;
+            }
+            if (y < LENGTH - 1) {
+                rightBorder = y + 1;
+            }
+            int leftTemp = leftBorder;
+            for (; upBorder <= downBorder; upBorder++) {
+                for (leftBorder = leftTemp; leftBorder <= rightBorder; leftBorder++) {
+                    points[x][y].openPoint();
+                }
+            }
+        }
+    }
+
+    public void openDeathPoints(int x, int y){
+        for(int i = 0; i < 4; i++){
+            switch (i){
+                case 0:{
+                    int count = 1;
+                    while (x - count >= 0 && (points[x - count][y].getPointStatus() == PointStatus.HAS_DEATH_SHIP || points[x - count][y].getPointStatus() == PointStatus.HAS_WOUNDED_SHIP)){
+                        openPoints(x - count, y);
+                        count++;
+                    }
+                    break;
+                }
+                case 1:{
+                    int count = 1;
+                    while (y - count >= 0 && (points[x][y - count].getPointStatus() == PointStatus.HAS_DEATH_SHIP || points[x][y - count].getPointStatus() == PointStatus.HAS_WOUNDED_SHIP)){
+                        openPoints(x, y - count);
+                        count++;
+                    }
+                    break;
+                }
+                case 2:{
+                    int count = 1;
+                    while (x + count < LENGTH && (points[x + count][y].getPointStatus() == PointStatus.HAS_WOUNDED_SHIP || points[x + count][y].getPointStatus() == PointStatus.HAS_DEATH_SHIP)){
+                        openPoints(x + count, y);
+                        count++;
+                    }
+                    break;
+                }
+                case 3:{
+                    int count = 1;
+                    while (y + count < LENGTH && (points[x][y + count].getPointStatus() == PointStatus.HAS_DEATH_SHIP || points[x][y + count].getPointStatus() == PointStatus.HAS_WOUNDED_SHIP)){
+                        openPoints(x, y + count);
+                        count++;
+                    }
+                    break;
+                }
+            }
+        }
+        openPoints(x, y);
+    }
+
     public boolean attackPoint(int x, int y){
         if (x >= 0 && x < LENGTH && y >= 0 && y < LENGTH){
             if (!points[x][y].attackPoint()){
@@ -117,6 +181,7 @@ public class Table {
         }
         return false;
     }
+
     public Table clone(){
         Point[][] newPoints = points.clone();
         return new Table(newPoints);

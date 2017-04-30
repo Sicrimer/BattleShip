@@ -16,6 +16,7 @@ public class Game {
         int count = hps.length;
         Table table = new Table();
         while(count != 0) {
+            clear();
             showTable(table);
             System.out.println("Введите координату x :");
             int x = scanner.nextInt();
@@ -82,30 +83,54 @@ public class Game {
         System.out.println("Ваше имя :");
         String firstPlayerName = scanner.next();
         Table firstPlayerTable = setupTable();
+        clear();
         System.out.println("Ваше имя :");
         String secondPlayerName = scanner.next();
         Table secondPlayerTable = setupTable();
+        clear();
         firstPlayer = new Player(firstPlayerName, firstPlayerTable, secondPlayerTable);
         secondPlayer = new Player(secondPlayerName, secondPlayerTable, firstPlayerTable);
         gameStarted = true;
         startGame();
     }
 
-    public void startGame(){
+    public void clear(){
+        for (int i = 0; i < 50; i++){
+            System.out.println();
+        }
+    }
+
+    public void startGame() {
         Player winner = null;
-        while (winner == null){
-                doTurn(firstPlayer, secondPlayer);
-                if(firstPlayer.getScore() == MAX_SCORE){
-                    winner = firstPlayer;
-                    break;
-                }
-                doTurn(secondPlayer, firstPlayer);
-                if (secondPlayer.getScore() == MAX_SCORE){
-                    winner = secondPlayer;
-                    break;
-                }
+        while (winner == null) {
+            doTurn(firstPlayer, secondPlayer);
+            if (firstPlayer.getScore() == MAX_SCORE) {
+                winner = firstPlayer;
+                break;
             }
+            doTurn(secondPlayer, firstPlayer);
+            if (secondPlayer.getScore() == MAX_SCORE) {
+                winner = secondPlayer;
+                break;
+            }
+        }
+        clear();
         System.out.println(winner.getName() + " is winner ");
+        System.out.println("Do you want to play again?");
+        String newGame = scanner.nextLine();
+        switch (newGame){
+            case "Yes":{
+            }
+            case "Да":{
+            }
+            case "да":{
+            }
+            case "yes":{
+                Game nGame = new Game();
+                nGame.setup();
+                break;
+            }
+        }
     }
 
     private void doTurn(Player player1, Player player2){
@@ -123,9 +148,17 @@ public class Game {
             if (player2.getTable().attackPoint(x, y)){
                 turnEnded = true;
             }
+            clear();
             if (player2.getTable().getPointStatus(x, y) == PointStatus.HAS_ALIVE_SHIP || player2.getTable().getPointStatus(x, y) == PointStatus.HAS_DEATH_SHIP){
                 turnEnded = false;
                 player1.addScore();
+                System.out.println("You hitted!");
+                if(player2.getTable().getPointStatus(x, y) == PointStatus.HAS_DEATH_SHIP){
+                    player2.getTable().openDeathPoints(x, y);
+                }
+            }
+            else {
+                System.out.println("You missed");
             }
             if (player1.getScore() == MAX_SCORE){
                 break;
